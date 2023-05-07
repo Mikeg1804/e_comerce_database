@@ -13,13 +13,13 @@ Product.findAll({indlude:[Category]}).then(products => res.json(products)).catch
 });
 
 // get one product
-router.get('/:id', async (req, res) => {
+router.get('/:id', (req, res) => {
   // find a single product by its `id`
 Product.findOne({
   where: {
     id: req.params.id,
   },
-}, {includes: Category}, {includes: Tag})
+}, {include: [Category]}, {include: [Tag]}).then(products => res.json(products)).catch(error => error.message);
   // be sure to include its associated Category and Tag data
 });
 
@@ -101,4 +101,5 @@ router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
 });
 
+// }).then(product => res.json(product)).catch(error => res.status(400).json({error: error.message}));
 module.exports = router;
