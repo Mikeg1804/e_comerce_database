@@ -14,17 +14,6 @@ router.get('/',  (req, res) => {
   // be sure to include its associated Products
 });
 
-// router.get('/:id',  (req, res) => {
-//   // find one category by its `id` value
-//   Category.findOne({
-//     where:{
-//       id:req.params.id
-//     },
-//     include: [{model: "product"}]
-//   }).then(category => res.json(category)).catch(error => error.message);
-
-//   // be sure to include its associated Products
-// });
 
 router.get('/:id', (req, res) => {
   Category.findOne({

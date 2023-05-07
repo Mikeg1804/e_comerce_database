@@ -5,7 +5,7 @@ const { Tag, Product, ProductTag } = require('../../models');
 
 router.get('/', (req, res) => {
   // find all tags
-  Tag.findAll({include: Product}).then(tags => res.json(tags)).catch(error => error.message);
+  Tag.findAll({include: [Product]}).then(tags => res.json(tags)).catch(error => error.message);
   // be sure to include its associated Product data
 });
 
@@ -14,8 +14,8 @@ router.get('/:id', (req, res) => {
   Tag.findOne({
     where:{
       id: req.params.id,
-    }
-  }, {include: Product}).then(tags => res.json(tags)).catch(error => error.message).catch(error => error.message);
+    },
+    include: [Product]}).then(tags => res.json(tags)).catch(error => error.message).catch(error => error.message);
   // be sure to include its associated Product data
 });
 
@@ -30,8 +30,13 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
-  Tag.destroy({where:{is: req.params.id}}).then(tags => res.json(tags)).catch(error => error.message);
+  // delete one tag by its `id` value
+  Tag.destroy({where: {id: req.params.id}})
+    .then(tag => {
+      res.json(tag);
+    })
+    .catch(error => {
+      res.status(500).json({ error: error.message });
+    });
 });
-
 module.exports = router;

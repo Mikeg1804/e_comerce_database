@@ -6,8 +6,7 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 // get all products
 router.get('/', (req, res) => {
   // find all products
-Product.findAll({indlude:[Category]}).then(products => res.json(products)).catch(error => error.message);
-// Product.findAll({indlude:[Category,{model:Tag, through: ProductTag}]}).then(products => res.json(products)).catch(error => error.message);
+Product.findAll({include:[Category, Tag]}).then(products => res.json(products)).catch(error => res.status(500).json({error:error.message}));
 
   // be sure to include its associated Category and Tag data
 });
@@ -19,20 +18,13 @@ Product.findOne({
   where: {
     id: req.params.id,
   },
-}, {include: [Category]}, {include: [Tag]}).then(products => res.json(products)).catch(error => error.message);
+  include: [Category, Tag]}).then(products => res.json(products)).catch(error => error.message);
   // be sure to include its associated Category and Tag data
 });
 
 // create new product
 router.post('/', (req, res) => {
-  /* req.body should look like this...
-    {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
-    }
-  */
+
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
@@ -101,5 +93,5 @@ router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
 });
 
-// }).then(product => res.json(product)).catch(error => res.status(400).json({error: error.message}));
+
 module.exports = router;
